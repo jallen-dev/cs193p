@@ -1,24 +1,35 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍", "🛺", "🚁", "🛶", "⛵️", "🚤", "🛳", "⛴", "🛥"]
-    @State var emojiCount = 4
+    let vehicles = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🛻", "🚚", "🚛", "🚜", "🛵", "🏍", "🛺", "🚁", "🛶", "⛵️", "🚤", "🛳", "⛴", "🛥"]
+    let sports = ["⚽️", "🏀", "🏈", "⚾️", "🥎", "🎾", "🏐", "🏉", "🏓"]
+    let food = ["🍎", "🍌", "🍉", "🍇", "🍓", "🍑", "🍒", "🥑", "🍆", "🌶", "🌽"]
+    
+    @State var emojis: [String]
+    
+    init() {
+        self.emojis = vehicles.shuffled()
+    }
     
     var body: some View {
         VStack {
+            Text("Memorize!")
+                .font(.largeTitle)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                    ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
+                    ForEach(emojis, id: \.self) { emoji in
                         CardView(content: emoji)
                             .aspectRatio(2/3, contentMode: .fit)
                     }
                 }
             }.foregroundColor(.red)
             Spacer()
-            HStack {
-                remove
+            HStack(alignment: .bottom) {
+                vehiclesButton
                 Spacer()
-                add
+                foodButton
+                Spacer()
+                sportsButton
             }
             .font(.largeTitle)
             .padding(.horizontal)
@@ -26,23 +37,40 @@ struct ContentView: View {
         .padding(.horizontal)
     }
     
-    var remove: some View {
+    var foodButton: some View {
         Button {
-            if emojiCount > 1 {
-                emojiCount -= 1
-            }
+            emojis = food.shuffled()
         } label: {
-            Image(systemName: "minus.circle")
+            VStack {
+                Image(systemName: "fork.knife")
+                Text("Food")
+                    .font(.caption)
+            }
         }
     }
     
-    var add: some View {
+    var sportsButton: some View {
         Button {
-            if emojiCount < emojis.count {
-                emojiCount += 1
-            }
+            emojis = sports.shuffled()
         } label: {
-            Image(systemName: "plus.circle")
+            VStack {
+                Image(systemName: "sportscourt")
+                Text("Sports")
+                    .font(.caption)
+            }
+        }
+    }
+    
+    var vehiclesButton: some View {
+        Button {
+            emojis = vehicles.shuffled()
+        } label: {
+            VStack {
+                Image(systemName: "car")
+                Text("Vehicles")
+                    .font(.caption)
+            }
+            
         }
     }
 }
