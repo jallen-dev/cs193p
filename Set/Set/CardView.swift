@@ -31,15 +31,22 @@ struct CardView: View {
         GeometryReader { geometry in
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: geometry.size.width * 0.05)
-                shape.fill().foregroundColor(.white)
-                shape.strokeBorder(borderColor, lineWidth: geometry.size.width * borderWidth)
-                VStack {
-                    Spacer()
-                    ForEach(0 ..< card.number.rawValue) { _ in
-                        CardSymbol().frame(height: geometry.size.height * 0.15)
+                if card.isFaceUp {
+                    shape.fill().foregroundColor(.white)
+                    shape.strokeBorder(borderColor, lineWidth: geometry.size.width * borderWidth)
+                    VStack {
                         Spacer()
-                    }
-                }.padding(geometry.size.width * 0.1)
+                        ForEach(0 ..< card.number.rawValue, id: \.self) { _ in
+                            CardSymbol().frame(height: geometry.size.height * 0.15)
+                            Spacer()
+                        }
+                    }.padding(geometry.size.width * 0.1)
+                } else {
+                    shape.fill(.white)
+                    shape.strokeBorder(.black, lineWidth: geometry.size.width * borderWidth)
+                    let inset = RoundedRectangle(cornerRadius: geometry.size.width * 0.05)
+                    inset.fill(.red).frame(width: geometry.size.width - 20, height: geometry.size.height - 20)
+                }
             }.padding(geometry.size.width * 0.025)
         }
     }

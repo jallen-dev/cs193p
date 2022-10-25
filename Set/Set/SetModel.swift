@@ -3,6 +3,7 @@ import Foundation
 struct SetModel {
     private(set) var deck: [Card]
     private(set) var cardsInPlay: [Card]
+    private(set) var discardPile: [Card]
     
     var selectedCardsAreMatchingSet: Bool {
         if selectedCards.count == 3 {
@@ -42,6 +43,7 @@ struct SetModel {
     init() {
         deck = [Card]()
         cardsInPlay = [Card]()
+        discardPile = [Card]()
         var i = 0
         
         for color in ColorEnum.allCases {
@@ -63,7 +65,12 @@ struct SetModel {
             return []
         }
         
-        let cards = deck[0..<number]
+        var cards = deck[0..<number]
+        
+        for i in cards.indices {
+            cards[i].isFaceUp = true
+        }
+        
         deck.removeFirst(number)
         return Array(cards)
     }
@@ -77,13 +84,14 @@ struct SetModel {
         }
         
         if selectedCardsAreMatchingSet {
+            discardSelectedCards()
             replaceSelectedCardsWith(drawnCards)
         } else {
             cardsInPlay.append(contentsOf: drawnCards)
         }
     }
     
-    mutating func replaceSelectedCardsWith(_ newCards: [Card]) {
+    private mutating func replaceSelectedCardsWith(_ newCards: [Card]) {
         var cardsToReplace: [Int] = []
         for selectedCard in selectedCards {
             if let index = cardsInPlay.firstIndex(where: { $0.id == selectedCard.id }) {
@@ -98,15 +106,10 @@ struct SetModel {
     
     mutating func choose(_ card: Card) {
         if selectedCardsAreMatchingSet {
-            // try to replace the selected cards with new cards drawn from the deck
-            let drawnCards = removeFromDeckAndReturn()
-            if drawnCards.count > 2 {
-                replaceSelectedCardsWith(drawnCards)
-            } else {
-                // there's no more cards in the deck, just remove without replacing
-                cardsInPlay = cardsInPlay.filter { card in
-                    card.id != selectedCards[0].id && card.id != selectedCards[1].id && card.id != selectedCards[2].id
-                }
+            discardSelectedCards()
+            
+            cardsInPlay = cardsInPlay.filter {
+                $0.id != selectedCards[0].id && $0.id != selectedCards[1].id && $0.id != selectedCards[2].id
             }
 
             // if the card chosen was already selected, don't select anything. otherwise select it (requirement #8 C&D)
@@ -123,6 +126,13 @@ struct SetModel {
             if let i = cardsInPlay.firstIndex(where: { $0.id == card.id }) {
                 cardsInPlay[i].selected = !card.selected
             }
+        }
+    }
+    
+    private mutating func discardSelectedCards() {
+        for var card in selectedCards {
+            card.selected = false
+            discardPile.append(card)
         }
     }
     
@@ -155,6 +165,7 @@ struct SetModel {
     }
     
     struct Card: Identifiable {
+        var isFaceUp = false
         var selected = false
         var color: ColorEnum
         var number: NumberEnum
