@@ -7,8 +7,16 @@ class SetViewModel: ObservableObject {
         model = SetModel()
     }
     
-    var cards: [SetModel.Card] {
+    var cardsInPlay: [SetModel.Card] {
         model.cardsInPlay
+    }
+    
+    var deck: [SetModel.Card] {
+        model.deck
+    }
+    
+    var discardPile: [SetModel.Card] {
+        model.discardPile
     }
     
     var isDeckEmpty: Bool {
