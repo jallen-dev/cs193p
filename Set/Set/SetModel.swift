@@ -13,7 +13,7 @@ struct SetModel {
     }
     
     var selectedCardsAreInvalidSet: Bool {
-//        note this is not simply !selectedCardsAreMatchingSet because sets of < 3 are neither
+        // note this is not simply !selectedCardsAreMatchingSet because sets of < 3 are neither
         if selectedCards.count == 3 {
             return !cardsFormASet(selectedCards)
         }
@@ -71,7 +71,7 @@ struct SetModel {
     mutating func draw() {
         let drawnCards = removeFromDeckAndReturn()
         
-//        shouldn't happen because we disable the button when deck is empty but just in case
+        // shouldn't happen because we disable the button when deck is empty but just in case
         if drawnCards.count == 0 {
             return
         }
@@ -98,28 +98,28 @@ struct SetModel {
     
     mutating func choose(_ card: Card) {
         if selectedCardsAreMatchingSet {
-//            try to replace the selected cards with new cards drawn from the deck
+            // try to replace the selected cards with new cards drawn from the deck
             let drawnCards = removeFromDeckAndReturn()
             if drawnCards.count > 2 {
                 replaceSelectedCardsWith(drawnCards)
             } else {
-//                there's no more cards in the deck, just remove without replacing
+                // there's no more cards in the deck, just remove without replacing
                 cardsInPlay = cardsInPlay.filter { card in
                     card.id != selectedCards[0].id && card.id != selectedCards[1].id && card.id != selectedCards[2].id
                 }
             }
 
-//            if the card chosen was already selected, don't select anything. otherwise select it (requirement #8 C&D)
+            // if the card chosen was already selected, don't select anything. otherwise select it (requirement #8 C&D)
             if card.selected {
                 selectedCards = []
             } else {
                 selectedCards = [card]
             }
         } else if selectedCardsAreInvalidSet {
-//            deselect them and select only this one
+            // deselect them and select only this one
             selectedCards = [card]
         } else {
-//            toggle this card's selection
+            // toggle this card's selection
             if let i = cardsInPlay.firstIndex(where: { $0.id == card.id }) {
                 cardsInPlay[i].selected = !card.selected
             }

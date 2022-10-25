@@ -3,7 +3,7 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject {
     static func createMemoryGame(theme: Theme) -> MemoryGame<String> {
         let numberOfPairs = min(theme.pairs, theme.emoji.count)
-        let emojis = Array(theme.emoji.shuffled()[0..<numberOfPairs])
+        let emojis = Array(theme.emoji.shuffled()[0 ..< numberOfPairs])
         return MemoryGame<String>(numberOfPairsOfCards: numberOfPairs) { pairIndex in
             emojis[pairIndex]
         }
@@ -17,7 +17,7 @@ class EmojiMemoryGame: ObservableObject {
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
     
-    var cards: Array<MemoryGame<String>.Card> {
+    var cards: [MemoryGame<String>.Card] {
         return model.cards
     }
     

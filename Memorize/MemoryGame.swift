@@ -1,13 +1,13 @@
 import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
-    private(set) var cards: Array<Card>
+    private(set) var cards: [Card]
     
     private var indexOfTheOneAndOnlyFaceUpCard: Int?
     var score = 0
     
     mutating func choose(_ card: Card) {
-        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}),
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }),
            !cards[chosenIndex].isFaceUp,
            !cards[chosenIndex].isMatched
         {
@@ -17,10 +17,10 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     cards[potentialMatchIndex].isMatched = true
                     score += 2
                 } else {
-                    if (cards[chosenIndex].seen) {
+                    if cards[chosenIndex].seen {
                         score -= 1
                     }
-                    if (cards[potentialMatchIndex].seen) {
+                    if cards[potentialMatchIndex].seen {
                         score -= 1
                     }
                 }
@@ -39,9 +39,9 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = Array<Card>()
+        cards = [Card]()
         // add numberOfPairsOfCards x 2 cards to cards array
-        for pairIndex in 0..<numberOfPairsOfCards {
+        for pairIndex in 0 ..< numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
             cards.append(Card(content: content, id: pairIndex * 2))
             cards.append(Card(content: content, id: pairIndex * 2 + 1))
