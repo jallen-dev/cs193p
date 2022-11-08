@@ -7,6 +7,9 @@ struct ContentView: View {
         VStack {
             HStack {
                 Text(viewModel.theme.name)
+                Text("\(viewModel.theme.color.red)")
+                Text("\(viewModel.theme.color.green)")
+                Text("\(viewModel.theme.color.blue)")
                 Spacer()
                 Text(viewModel.score)
             }.font(.largeTitle)
@@ -20,7 +23,7 @@ struct ContentView: View {
                             }
                     }
                 }
-            }.foregroundColor(viewModel.color)
+            }.foregroundColor(Color(rgbaColor: viewModel.theme.color))
                 .font(.largeTitle)
 
             Button {
@@ -55,7 +58,8 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let game = EmojiMemoryGame()
+        let theme = Theme(name: "Halloween", emojis: "💀👻🎃👽👨‍🚀", pairs: 7, color: RGBAColor(color: Color(red: 0.8, green: 0.2, blue: 0.1)), id: 1)
+        let game = EmojiMemoryGame(theme: theme)
         ContentView(viewModel: game)
             .preferredColorScheme(.dark)
         ContentView(viewModel: game)
